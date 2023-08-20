@@ -9,13 +9,13 @@
 from __future__ import annotations
 
 import bisect
-from typing import Iterable, Iterator, TypeVar, Callable
+from typing import Iterable, Iterator, TypeVar, Callable, Generic
 
 
 T = TypeVar("T")
 
 
-class TreeSet(object):
+class TreeSet(Generic[T]):
     """
     Binary-tree set like java Treeset.
     Duplicate elements will not be added.
@@ -54,14 +54,14 @@ class TreeSet(object):
     def __getitem__(self, num):
         return self._treeset[num]
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._treeset)
 
-    def clear(self):
+    def clear(self) -> None:
         """Delete all elements in TreeSet."""
         self._treeset = []
 
-    def clone(self):
+    def clone(self) -> TreeSet[T]:
         """
         Return shallow copy of self.
         """
@@ -84,7 +84,7 @@ class TreeSet(object):
         """
         yield from self._treeset
 
-    def pop(self, index):
+    def pop(self, index: int) -> T:
         return self._treeset.pop(index)
 
     def __repr__(self) -> str:
@@ -95,7 +95,7 @@ class TreeSet(object):
             return NotImplemented
         return self._treeset == target._treeset
 
-    def __contains__(self, e):
+    def __contains__(self, e: T) -> bool:
         """
         Fast attribution judgment by bisect
         """

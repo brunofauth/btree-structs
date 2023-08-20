@@ -6,7 +6,13 @@
 # License: Apache 2.0
 #-------------------------------------------------------------------------------
 
+from __future__ import annotations
+
 import bisect
+from typing import Iterable, Iterator, TypeVar, Callable
+
+
+T = TypeVar("T")
 
 
 class TreeSet(object):
@@ -15,18 +21,22 @@ class TreeSet(object):
     Duplicate elements will not be added.
     When added new element, TreeSet will be sorted automatically.
     """
-    def __init__(self, elements):
-        self._treeset = []
-        self.addAll(elements)
+    def __init__(
+        self,
+        elements: Iterable[T],
+        key: Callable[[T], int],
+    ) -> None:
+        self._treeset = list(set(elements))
+        self._treeset.sort(key=key)
+        self._key_func = key
 
-    def addAll(self, elements):
+    def addAll(self, elements: Iterable[T]) -> None:
         for element in elements:
-            if element in self: continue
             self.add(element)
 
-    def add(self, element):
+    def add(self, element: T) -> None:
         if element not in self:
-            bisect.insort(self._treeset, element)
+            bisect.insort(self._treeset, element, key=self._key_func)
 
     def ceiling(self, e):
         index = bisect.bisect_right(self._treeset, e)
@@ -48,9 +58,7 @@ class TreeSet(object):
         return len(self._treeset)
 
     def clear(self):
-        """
-        Delete all elements in TreeSet.
-        """
+        """Delete all elements in TreeSet."""
         self._treeset = []
 
     def clone(self):
@@ -63,30 +71,29 @@ class TreeSet(object):
         """
         Remove element if element in TreeSet.
         """
+        # This should use bisect to find the element's index and then __delitem__
         try:
             self._treeset.remove(element)
         except ValueError:
             return False
         return True
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[T]:
         """
         Do ascending iteration for TreeSet
         """
-        for element in self._treeset:
-            yield element
+        yield from self._treeset
 
     def pop(self, index):
         return self._treeset.pop(index)
 
-    def __str__(self):
-        return str(self._treeset)
+    def __repr__(self) -> str:
+        return f"{{{', '.join(self._treeset)}}}"
 
-    def __eq__(self, target):
-        if isinstance(target, TreeSet):
-            return self._treeset == target.treeset
-        elif isinstance(target, list):
-            return self._treeset == target
+    def __eq__(self, target: TreeSet) -> bool:
+        if not isinstance(target, TreeSet):
+            return NotImplemented
+        return self._treeset == target._treeset
 
     def __contains__(self, e):
         """

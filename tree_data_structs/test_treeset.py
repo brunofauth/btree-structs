@@ -19,7 +19,7 @@ class TestTreeSet(unittest.TestCase):
         ts.remove(5)
         self.assertEqual(ts, [1, 2, 3, 4])
 
-        ts.addAll([3,4,5,6])
+        ts.add_from_iter([3,4,5,6])
         self.assertEqual(ts, [1, 2, 3, 4, 5, 6])
 
         ts.pop(3)

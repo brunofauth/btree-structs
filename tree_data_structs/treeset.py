@@ -17,20 +17,34 @@ T = TypeVar("T")
 
 class TreeSet(Generic[T]):
     """
-    Binary-tree set like java Treeset.
+    Binary-tree set, like java's Treeset.
     Duplicate elements will not be added.
-    When added new element, TreeSet will be sorted automatically.
+    Ordering is kept after adding/removing elements.
     """
+
+    @classmethod
+    def from_iter(
+        cls,
+        iterable: Iterable[T],
+        *,
+        key: Callable[[T], int] | None = None,
+    ) -> TreeSet[T]:
+        return TreeSet(*iterable, key=key)
+
     def __init__(
         self,
-        elements: Iterable[T],
-        key: Callable[[T], int],
+        *elements: Iterable[T],
+        key: Callable[[T], int] | None = None,
     ) -> None:
         self._treeset = list(set(elements))
         self._treeset.sort(key=key)
         self._key_func = key
 
-    def addAll(self, elements: Iterable[T]) -> None:
+    def extend(self, other: Iterable[T]) -> None:
+        self._treeset.extend(other)
+        self._treeset.sort(key=self._key_func)
+
+    def add_from_iter(self, elements: Iterable[T]) -> None:
         for element in elements:
             self.add(element)
 
@@ -38,50 +52,31 @@ class TreeSet(Generic[T]):
         if element not in self:
             bisect.insort(self._treeset, element, key=self._key_func)
 
-    def ceiling(self, e):
-        index = bisect.bisect_right(self._treeset, e)
-        if self[index - 1] == e:
-            return e
-        return self._treeset[bisect.bisect_right(self._treeset, e)]
-
-    def floor(self, e):
-        index = bisect.bisect_left(self._treeset, e)
-        if self[index] == e:
-            return e
-        else:
-            return self._treeset[bisect.bisect_left(self._treeset, e) - 1]
-
-    def __getitem__(self, num):
-        return self._treeset[num]
-
-    def __len__(self) -> int:
-        return len(self._treeset)
-
     def clear(self) -> None:
         """Delete all elements in TreeSet."""
         self._treeset = []
 
     def clone(self) -> TreeSet[T]:
-        """
-        Return shallow copy of self.
-        """
+        """Return shallow copy of self."""
         return TreeSet(self._treeset)
 
-    def remove(self, element):
-        """
-        Remove element if element in TreeSet.
-        """
-        # This should use bisect to find the element's index and then __delitem__
-        try:
-            self._treeset.remove(element)
-        except ValueError:
-            return False
-        return True
+    def remove(self, element: T) -> None:
+        """Remove element if element in TreeSet."""
+        index = bisect.bisect_right(self._treeset, element, key=self._key_func)
+        if len(self) > 0 and self._treeset[index] == element:
+            del self._treeset[index]
+
+    def __getitem__(self, num: int) -> T:
+        return self._treeset[num]
+    
+    def __delitem__(self, index: int) -> None:
+        del self._treeset[index]
+
+    def __len__(self) -> int:
+        return len(self._treeset)
 
     def __iter__(self) -> Iterator[T]:
-        """
-        Do ascending iteration for TreeSet
-        """
+        """Do ascending iteration for TreeSet"""
         yield from self._treeset
 
     def pop(self, index: int) -> T:
@@ -96,13 +91,12 @@ class TreeSet(Generic[T]):
         return self._treeset == target._treeset
 
     def __contains__(self, e: T) -> bool:
-        """
-        Fast attribution judgment by bisect
-        """
+        """Fast attribution judgment by bisect"""
         try:
-            return e == self._treeset[bisect.bisect_left(self._treeset, e)]
+            return e == self._treeset[bisect.bisect_left(self._treeset, e, key=self._key_func)]
         except:
             return False
+
 
 if __name__ == '__main__':
     ts = TreeSet([3,7,7,1,3])
@@ -111,3 +105,4 @@ if __name__ == '__main__':
     print(ts.floor(3))
     print(ts.ceiling(3))
     print(ts)
+

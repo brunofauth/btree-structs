@@ -1,5 +1,5 @@
 import unittest
-from treeset import TreeSet
+from set import TreeSet
 
 class TestTreeSet(unittest.TestCase):
 

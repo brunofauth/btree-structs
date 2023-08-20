@@ -1,5 +1,5 @@
 import unittest
-from treemap import TreeMap
+from map import TreeMap
 
 
 class TestTreeMap(unittest.TestCase):

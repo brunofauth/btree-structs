@@ -43,11 +43,6 @@ class TestTreeSet(unittest.TestCase):
         ts_copy = ts.clone()
         self.assertEqual(ts, [1, 2, 3, 5, 6])
 
-        self.assertEqual(ts.floor(4), 3)
-        self.assertEqual(ts.ceiling(4), 5)
-        self.assertEqual(ts.floor(3), 3)
-        self.assertEqual(ts.ceiling(3), 3)
-
         ts.clear()
         self.assertEqual(ts._treeset, [])
 

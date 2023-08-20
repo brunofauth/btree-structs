@@ -100,9 +100,5 @@ class TreeSet(Generic[T]):
 
 if __name__ == '__main__':
     ts = TreeSet([3,7,7,1,3])
-    print(ts.floor(4))
-    print(ts.ceiling(4))
-    print(ts.floor(3))
-    print(ts.ceiling(3))
     print(ts)
 

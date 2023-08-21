@@ -1,0 +1,31 @@
+# Maintainer: Bruno Fauth <bvfauth@hotmail.com>
+
+_name=btree-structs
+pkgname="python-$_name"
+pkgver='0.1.0'
+pkgrel=1
+pkgdesc= "Binary-tree-based map and set data structures"
+
+
+arch=('any')
+url="https://github.com/brunofauth/$_name"
+license=('MIT')
+
+depends=('python')
+makedepends=(python-build python-installer python-wheel)
+
+source=("git+file:///home/bruno/cln/btree-structs/")
+md5sums=('SKIP')
+
+build() {
+    cd "$_name"
+    python -m build --wheel --no-isolation
+}
+
+
+package() {
+    cd "$_name"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+    # install -Dm644 "shared_files/fish_completion.fish" "$pkgdir/usr/share/fish/completions/$_name.fish"
+}
+

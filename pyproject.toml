@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "btree-structs"
+version = "0.1.0"
+description = "Binary-tree-based map and set data structures"
+authors = ["Bruno Fauth <149593@upf.br>"]
+license = "MIT"
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+keywords = ["treeset", "treemap", "binary", "tree", "map", "set"]
+repository = "https://github.com/brunofauth/btree-structs"
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/brunofauth/btree-structs/issues"
+"Homepage" = "https://github.com/brunofauth/btree-structs"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+# [tool.poetry.scripts]
+# ssrs = 'ssrs.ssrs:shebang'
+# ssrs-cli = 'ssrs.ssrs:cli'
+
